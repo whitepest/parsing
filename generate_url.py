@@ -1,9 +1,10 @@
 import urllib.parse
-from dotenv import load_dotenv
+import json
 import os
 import secrets
 
-load_dotenv()
+with open("config.json", "r") as config_file:
+    config = json.load(config_file)
 
 
 def generate_auth_url(client_id, redirect_uri, scope, state):
@@ -18,7 +19,7 @@ def generate_auth_url(client_id, redirect_uri, scope, state):
     return f"{base_url}?{urllib.parse.urlencode(params)}"
 
 # Replace with your values
-client_id = os.getenv("CLIENT_ID")
+client_id = config["client_id"]
 redirect_uri = "http://localhost:5000/callback"  # Must match what you registered
 scope = "jobs.read clients.read"   # Adjust scope based on your needs
 state = secrets.token_urlsafe(8) # For CSRF protection (any random string)

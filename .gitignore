@@ -1,5 +1,6 @@
 # Ignore virtual environment
 parsing/
+venv/
 
 # Byte-compiled files
 __pycache__/
