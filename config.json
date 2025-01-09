@@ -3,5 +3,7 @@
     "client_secret": "bd19777156515639d71a235cbdb771f1e8803ab698b1a8840e76332ed0ef7b82",
     "access_token": "your_access_token",
     "refresh_token": "your_refresh_token",
-    "expires_at": 0
+    "expires_at": 0,
+    "redirect_uri" : "http://localhost:5001/callback",
+    "scope": "jobs.read clients.read"
 }
