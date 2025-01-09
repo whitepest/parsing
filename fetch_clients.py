@@ -1,7 +1,6 @@
 import requests
 import json
 
-# Load configuration from auth_code.json or access_token.json
 def load_config():
     try:
         with open("tokens.json", "r") as file:
@@ -14,33 +13,33 @@ def load_config():
         print("Error: Access token not found in access_token.json.")
         return None
 
-# Fetch the clients
-def fetch_clients(access_token):
-    url = "https://api.getjobber.com/api/clients"  # Replace with the correct endpoint for fetching clients
-    headers = {
-        "Authorization": f"Bearer {access_token}",
-        "Accept": "application/json",
-    }
-    response = requests.get(url, headers=headers)
-    if response.status_code == 200:
-        data = response.json()
-        return len(data.get("clients", []))  # Adjust the key based on Jobber's API response structure
-    else:
-        print(f"Failed to fetch clients: {response.status_code} {response.text}")
-        return None
 
-# Main script
-def main():
-    access_token = load_config()
-    if not access_token:
-        print("No valid access token found.")
-        return
+access_token = load_config()
+if not access_token:
+    raise ValueError("Access token is missing. Ensure tokens.json is properly configured.")
 
-    client_count = fetch_clients(access_token)
-    if client_count is not None:
-        print(f"Number of clients: {client_count}")
-    else:
-        print("Failed to retrieve the number of clients.")
+# Define the endpoint and headers
+url = "https://api.getjobber.com/api/graphql"
+headers = {
+    "Authorization": f"Bearer {access_token}",
+    "Content-Type": "application/json",
+    "X-JOBBER-GRAPHQL-VERSION": "2024-12-05"
+}
 
-if __name__ == "__main__":
-    main()
+# Define the GraphQL query
+query = """
+query SampleQuery {
+  clients {
+    totalCount
+  }
+}
+"""
+
+# Send the POST request
+response = requests.post(url, json={"query": query}, headers=headers)
+
+# Check and print the response
+if response.status_code == 200:
+    print("Response JSON:", response.json())
+else:
+    print(f"Error: {response.status_code}, {response.text}")
