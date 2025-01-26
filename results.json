@@ -1,138 +1,182 @@
 [
   {
-    "id": "Z2lkOi8vSm9iYmVyL0pvYi8xMDU5NTg2NjA=",
+    "id": "Z2lkOi8vSm9iYmVyL0pvYi8xMDU1ODI3MDM=",
     "title": "Andrew",
     "client": {
-      "name": "Connor Group"
+      "name": "Nasir Hussain"
     },
-    "startAt": "2025-01-29T05:00:00Z",
+    "startAt": "2025-01-27T05:00:00Z",
     "lineItems": {
       "edges": [
         {
           "node": {
-            "description": "Location: Bed 1 window 2 bottom right \r\nGlass Type: Annealed low e hard coat \r\nSize: 27 5/16 x 33 3/8\r\nOA: 5/8 \r\nMuntin Bars: 2h 2v white 5/8 \r\nNote: Balancers are not working. We are not responsible for this\r\nDisclaimer: Some Glass may require an additional visit for more precise measurements. \r\n\r\nPlease be advised:\r\nLead times may vary depending on the type of glass, ranging from 3 to 21 days."
-          }
-        }
-      ]
-    }
-  },
-  {
-    "id": "Z2lkOi8vSm9iYmVyL0pvYi8xMDU4NjAxMDc=",
-    "title": "Andrew",
-    "client": {
-      "name": "James Stauffer"
-    },
-    "startAt": "2025-01-29T05:00:00Z",
-    "lineItems": {
-      "edges": [
-        {
-          "node": {
-            "description": "Location: Dining room bay window 1 \r\nGlass Type: Annealed low e hard coat \r\nSize: 19 x 67\r\nOA: 1 inch \r\nMuntin Bars:\r\n\r\nDisclaimer: Some Glass may require an additional visit for more precise measurements. \r\n\r\nPlease be advised:\r\nLead times may vary depending on the type of glass, ranging from 3 to 21 days."
-          }
-        }
-      ]
-    }
-  },
-  {
-    "id": "Z2lkOi8vSm9iYmVyL0pvYi8xMDU2OTI0NTc=",
-    "title": "Andrew",
-    "client": {
-      "name": "Malinda Forte"
-    },
-    "startAt": "2025-01-29T05:00:00Z",
-    "lineItems": {
-      "edges": [
-        {
-          "node": {
-            "description": "Location: Living room window 5 \r\nGlass Type: Tempered low e soft coat \r\nSize: 38 1/8 x 71 5/8 \r\nOA: 7/8 \r\nMuntin Bars:\r\n\r\nDisclaimer: Some Glass may require an additional visit for more precise measurements. \r\n\r\nPlease be advised:\r\nLead times may vary depending on the type of glass, ranging from 3 to 21 days."
-          }
-        }
-      ]
-    }
-  },
-  {
-    "id": "Z2lkOi8vSm9iYmVyL0pvYi8xMDU2ODg4MjA=",
-    "title": "Andrew+ Kirill",
-    "client": {
-      "name": "LC River South"
-    },
-    "startAt": "2025-01-29T05:00:00Z",
-    "lineItems": {
-      "edges": [
-        {
-          "node": {
-            "description": "Location: 275 S Front St unit 532 bedroom top center arched\r\nGlass Type: annealed, Lowe soft\r\nSize: 27 1/2x 69 1/4 center and 68 1/4 sides\r\nOA: 1\u201d grey super spacer\r\nMuntin Bars:0\r\n\r\nDisclaimer: Some Glass may require an additional visit for more precise measurements. \r\n\r\nPlease be advised:\r\nLead times may vary depending on the type of glass, ranging from 3 to 21 days."
-          }
-        }
-      ]
-    }
-  },
-  {
-    "id": "Z2lkOi8vSm9iYmVyL0pvYi8xMDUzMjc2OTI=",
-    "title": "Andrew",
-    "client": {
-      "name": "Keller Williams Realty"
-    },
-    "startAt": "2025-01-29T05:00:00Z",
-    "lineItems": {
-      "edges": [
-        {
-          "node": {
-            "description": "Location: Top of steps, bottom \r\nStamp: 7 pounds \r\n\r\nNote: \r\nAll parts have to be lubricated once a year."
+            "description": "Location: Living room window 4 \r\nType: Casement"
           }
         },
         {
           "node": {
-            "description": "Location: Top of steps, pivot feet"
-          }
-        },
-        {
-          "node": {
-            "description": "37 5/8 x 36 5/8"
-          }
-        },
-        {
-          "node": {
-            "description": "Location: Left side garage, right sash (osli)\r\nGlass Type: Annealed clear single pane \r\nSize: 23 x 33 \r\nOA: 1/8 \r\nMuntin Bars:\r\n\r\nDisclaimer: Some Glass may require an additional visit for more precise measurements. \r\n\r\nPlease be advised:\r\nLead times may vary depending on the type of glass, ranging from 3 to 21 days."
+            "description": "Location: Same window\r\n10 inch hinges"
           }
         }
       ]
     }
   },
   {
-    "id": "Z2lkOi8vSm9iYmVyL0pvYi8xMDU4Nzc1MDE=",
+    "id": "Z2lkOi8vSm9iYmVyL0pvYi8xMDU3ODM1NzU=",
+    "title": "Andrew",
+    "client": {
+      "name": "David Straten"
+    },
+    "startAt": "2025-01-27T05:00:00Z",
+    "lineItems": {
+      "edges": [
+        {
+          "node": {
+            "description": "Location: 3rd floor bedroom 1 window1 bottom sash\r\nGlass Type: annealed clear\r\nSize: 19 1/2 x 19 3/4\r\nOA: 3/4\r\nMuntin Bars:\r\n\r\nDisclaimer: Some Glass may require an additional visit for more precise measurements. \r\n\r\nPlease be advised:\r\nLead times may vary depending on the type of glass, ranging from 3 to 21 days."
+          }
+        },
+        {
+          "node": {
+            "description": "Location: 3rd floor bedroom 2 window 2 bottom sash\r\nGlass Type: annealed clear \r\nSize: 15 1/2 x 19 3/4\r\nOA: 3/4\r\nMuntin Bars:\r\n\r\nDisclaimer: Some Glass may require an additional visit for more precise measurements. \r\n\r\nPlease be advised:\r\nLead times may vary depending on the type of glass, ranging from 3 to 21 days."
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "Z2lkOi8vSm9iYmVyL0pvYi8xMDU3NjEwMzk=",
+    "title": "Andrew",
+    "client": {
+      "name": "John  Ypsilantis"
+    },
+    "startAt": "2025-01-27T05:00:00Z",
+    "lineItems": {
+      "edges": [
+        {
+          "node": {
+            "description": "Location: Bedroom 3 window 4 bottom \r\nGlass Type: Annealed low e hard coat \r\nSize: 31 7/8 x 21 3/8 \r\nOA: 3/4 \r\nMuntin Bars: 1h 2v white 5/8 \r\n\r\nDisclaimer: Some Glass may require an additional visit for more precise measurements. \r\n\r\nPlease be advised:\r\nLead times may vary depending on the type of glass, ranging from 3 to 21 days."
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "Z2lkOi8vSm9iYmVyL0pvYi8xMDU3Njg0NTc=",
+    "title": "Andrew",
+    "client": {
+      "name": "Brian Harper"
+    },
+    "startAt": "2025-01-27T05:00:00Z",
+    "lineItems": {
+      "edges": [
+        {
+          "node": {
+            "description": "Location: kitchen window 1 top sash\r\nGlass Type: Low-e cardinal \r\nSize: 42 x 30 1/2\r\nOA: 3/4\r\nMuntin Bars: 1 v white 3/4\r\n\r\nDisclaimer: Some Glass may require an additional visit for more precise measurements. \r\n\r\nPlease be advised:\r\nLead times may vary depending on the type of glass, ranging from 3 to 21 days."
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "Z2lkOi8vSm9iYmVyL0pvYi8xMDU4Mjg5NTI=",
+    "title": "Andrew",
+    "client": {
+      "name": "Tony  Obergefell"
+    },
+    "startAt": "2025-01-27T05:00:00Z",
+    "lineItems": {
+      "edges": [
+        {
+          "node": {
+            "description": "Location: Bedroom 2, bottom insert pella \r\n28 9/16 x 16 9/16\r\nPella does not make inserts. We could make one out of glass and wood."
+          }
+        },
+        {
+          "node": {
+            "description": ""
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "Z2lkOi8vSm9iYmVyL0pvYi8xMDUxNTU3NTI=",
+    "title": "Ion",
+    "client": {
+      "name": "Charlie Jamison"
+    },
+    "startAt": "2025-01-27T05:00:00Z",
+    "lineItems": {
+      "edges": [
+        {
+          "node": {
+            "description": "Location: Back patio door, non fixed sash \r\nGlass Type: Tempered low e hard coat \r\nSize:31 1/4 x 70\r\nOA: 7/8 \r\nMuntin Bars:\r\n\r\nDisclaimer: Some Glass may require an additional visit for more precise measurements. \r\n\r\nPlease be advised:\r\nLead times may vary depending on the type of glass, ranging from 3 to 21 days."
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "Z2lkOi8vSm9iYmVyL0pvYi8xMDUzMjg5ODU=",
+    "title": "Dima",
+    "client": {
+      "name": "Roy  Troutman"
+    },
+    "startAt": "2025-01-27T05:00:00Z",
+    "lineItems": {
+      "edges": [
+        {
+          "node": {
+            "description": "Location: office top sash \r\nGlass Type: annealed clear \r\nSize: 31 3/4 x 27 3/8 \r\nOA: 11/16\r\nMuntin Bars:\r\n\r\nDisclaimer: Some Glass may require an additional visit for more precise measurements. \r\n\r\nPlease be advised:\r\nLead times may vary depending on the type of glass, ranging from 3 to 21 days."
+          }
+        },
+        {
+          "node": {
+            "description": "Location: bedroom 2 window 1 \r\nTube width: 5/8 x 28 \r\nTip color: red \r\n\r\nNote:\r\nAll parts have to be lubricated once a year for better performance."
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "Z2lkOi8vSm9iYmVyL0pvYi8xMDQ4NzAwNjA=",
     "title": "Leo",
     "client": {
-      "name": "Steve  Williamson"
+      "name": "James A Wimbush"
     },
-    "startAt": "2025-01-29T05:00:00Z",
+    "startAt": "2025-01-27T05:00:00Z",
     "lineItems": {
       "edges": [
         {
           "node": {
-            "description": "Location: Left side of house bay window 2 \r\nGlass Type: Annealed low e hard coat \r\nSize: 44 7/16 x 31 7/8 \r\nOA: 7/8 \r\nMuntin Bars:\r\n\r\nDisclaimer: Some Glass may require an additional visit for more precise measurements. \r\n\r\nPlease be advised:\r\nLead times may vary depending on the type of glass, ranging from 3 to 21 days."
+            "description": "Location: Back of house window 1 \r\nType: Double hung \r\nMaterial: Vinyl \r\n  Color: White \r\nBrand:  Provia endure \r\nSize: 35 1/2 x 37 \r\n!!35 9/16 x 36 3/4 updated\r\nGrids:  \r\nInterior Trim:  \r\nExterior Trim:  \r\n\r\nDisclaimer:  \r\nKindly be advised that specific windows may require an additional visit for precise measurements.\r\n\r\n**Note:**  \r\nWe wish to notify you that lead times may vary between 1 to 6 months during peak seasons. Please be aware that any manufacturer delays are beyond our control."
+          }
+        },
+        {
+          "node": {
+            "description": ""
           }
         }
       ]
     }
   },
   {
-    "id": "Z2lkOi8vSm9iYmVyL0pvYi8xMDUwNTg2MTg=",
+    "id": "Z2lkOi8vSm9iYmVyL0pvYi8xMDM4MzI4MzQ=",
     "title": "Leo",
     "client": {
-      "name": "Erica Armstrong"
+      "name": "Michael  T. Davis"
     },
-    "startAt": "2025-01-29T05:00:00Z",
+    "startAt": "2025-01-27T05:00:00Z",
     "lineItems": {
       "edges": [
         {
           "node": {
-            "description": "Location: Kitchen bay window 2 \r\nGlass Type: Tempered  low e soft coat \r\nSize: 39 3/4 x 57 1/4 \r\nOA: 5/8 \r\nMuntin Bars:\r\n\r\nDisclaimer: Some Glass may require an additional visit for more precise measurements. \r\n\r\nPlease be advised:\r\nLead times may vary depending on the type of glass, ranging from 3 to 21 days."
+            "description": "Location: Front door add peephole and door numbers must be removed off the old door and added to the new. They are easily removable I had them out when I was there. \r\nDimensions: 36 x 82 \r\n\r\n! Remeasure ! - 37 1/2\u00d781 1/2\r\n\r\nBrand Name: ProVia \r\nGrid Patterns and Color: \r\nInterior/Exterior Color: White / beige \r\nInterior/Exterior Trim Details: Casing \r\n\r\nDisclaimer: Some doors may require an additional visit for more precise measurements."
           }
         },
         {
           "node": {
-            "description": "Location: Same window, bottom right corner (osli) is soft and has a gap in the corner. If they pull the window apart and the sash is not rotted we will remove the charge. \r\n\r\nPlease provide paint the day of labor \r\nType:"
+            "description": ""
           }
         },
         {
