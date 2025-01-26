@@ -2,6 +2,26 @@ import requests
 import json
 from datetime import datetime, timedelta
 
+def load_config():
+    try:
+        with open("tokens.json", "r") as file:
+            data = json.load(file)
+            return data["access_token"]
+    except FileNotFoundError:
+        print("Error: tokens.json not found.")
+        return None
+    except KeyError:
+        print("Error: Access token not found in access_token.json.")
+        return None
+
+
+access_token = load_config()
+if not access_token:
+    raise ValueError("Access token is missing. Ensure tokens.json is properly configured.")
+
+
+
+
 # Function to execute the GraphQL query
 def run_query(query, variables, headers):
     response = requests.post('https://your-graphql-endpoint.com/graphql', json={'query': query, 'variables': variables}, headers=headers)
@@ -63,8 +83,9 @@ if __name__ == "__main__":
     date_input = input("Enter the date (DD/MM/YYYY): ")
     # Replace with your actual API token
     headers = {
-        'Authorization': 'Bearer YOUR_API_TOKEN',
-        'Content-Type': 'application/json'
+        "Authorization": f"Bearer {access_token}",
+        "Content-Type": "application/json",
+        "X-JOBBER-GRAPHQL-VERSION": "2024-12-05"
     }
 
     try:
