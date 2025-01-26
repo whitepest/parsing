@@ -9,6 +9,7 @@ __pycache__/
 
 # Ignore environment variable files (if sensitive data)
 .env
+config.json
 
 # Ignore editor and OS-specific files
 *.swp
