@@ -67,7 +67,15 @@ def fetch_all_jobs_for_date(iso_date, headers):
     while True:
         result = run_query(query, variables, headers)
         jobs = result['data']['jobs']['edges']
-        all_jobs.extend([job['node'] for job in jobs])  # Collect job details
+        for job in jobs:
+            job_node = job['node']
+            filtered_line_items = [
+                item['node'] for item in job_node.get('lineItems', {}).get('edges', [])
+                if "Glass Type:" in item['node'].get('description', '')
+            ]
+            if filtered_line_items:
+                job_node['lineItems']['edges'] = [{'node': item} for item in filtered_line_items]
+                all_jobs.append(job_node)
         page_info = result['data']['jobs']['pageInfo']
         if page_info['hasNextPage']:
             variables['after'] = page_info['endCursor']
