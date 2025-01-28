@@ -3,7 +3,7 @@ import json
 
 # Step 1: Load configuration and authorization code
 with open("config.json", "r") as config_file:
-    config = json.load(config_file)
+  config = json.load(config_file)
 
 with open("auth_code.json", "r") as auth_code_file:
     auth_data = json.load(auth_code_file)
