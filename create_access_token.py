@@ -1,16 +1,16 @@
 import requests
 import json
 
-# Step 1: Load configuration and authorization code
+# Load configuration and authorization code
 with open("config.json", "r") as config_file:
-  config = json.load(config_file)
+    config = json.load(config_file)
 
 with open("auth_code.json", "r") as auth_code_file:
     auth_data = json.load(auth_code_file)
 
 authorization_code = auth_data["authorization_code"]
 
-# Step 2: Prepare token request data
+# Prepare token request data
 url = "https://api.getjobber.com/api/oauth/token"
 headers = {
     "Content-Type": "application/x-www-form-urlencoded"
@@ -23,7 +23,7 @@ data = {
     "redirect_uri": config["redirect_uri"]
 }
 
-# Step 3: Send the POST request to exchange the code for tokens
+# Send the POST request to exchange the code for tokens
 response = requests.post(url, headers=headers, data=data)
 
 if response.status_code == 200:
@@ -31,14 +31,20 @@ if response.status_code == 200:
     access_token = tokens.get("access_token")
     refresh_token = tokens.get("refresh_token")
 
-    # Step 4: Save the tokens to a JSON file
+    # Save the access token separately (optional)
     with open("tokens.json", "w") as tokens_file:
-        json.dump(tokens, tokens_file, indent=4)
+        json.dump({"access_token": access_token}, tokens_file, indent=4)
 
-    print("Access token and refresh token saved to tokens.json.")
-    print(f"Access Token: {access_token}")
-    print(f"Refresh Token: {refresh_token}")
+    # Update config.json to store refresh_token
+    config["refresh_token"] = refresh_token
+    with open("config.json", "w") as config_file:
+        json.dump(config, config_file, indent=4)
+
+    print("✅ Access token saved to tokens.json")
+    print("✅ Refresh token saved to config.json")
+    print(f"🔑 Access Token: {access_token}")
+    print(f"🔄 Refresh Token: {refresh_token}")
 
 else:
-    print(f"Failed to create access token: {response.status_code}")
+    print(f"❌ Failed to create access token: {response.status_code}")
     print(response.json())
