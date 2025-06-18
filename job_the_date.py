@@ -244,7 +244,7 @@ def create_screen_with_total(jobs, output_file):
 
             # Write the total row at the end
             writer.writerow([])
-            writer.writerow(['', '', '', 'Total Screen', total_screen_panes, '', ''])
+            writer.writerow(['', '', '', 'Total Screen', total_screen_panes, '', '','',''])
 
         print(f"CSV table with total screen panes created successfully at {output_file}")
     except Exception as e:
