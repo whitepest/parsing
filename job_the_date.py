@@ -214,7 +214,7 @@ def create_screen_with_total(jobs, output_file):
                 for item in line_items:
                     description = item.get('node', {}).get('description', 'N/A')
                     quantity = item.get('node', {}).get('quantity', 0)
-                    total_Screen_panes += quantity  # Accumulate total screen panes
+                    total_screen_panes += quantity  # Accumulate total screen panes
                     
                     # Extract screen details from the description
                     screen_size = "N/A"
