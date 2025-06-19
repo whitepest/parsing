@@ -141,7 +141,7 @@ def fetch_all_screen_jobs_for_date(iso_date, headers):
     return all_screen_jobs
 
 # Function to create the table of glass with a total count
-def create_table_with_total(jobs, output_file):
+def create_table_with_total(jobs, output_file, iso_date):
     if not jobs:
         print("No jobs found for the specified date.")
         return
@@ -186,14 +186,14 @@ def create_table_with_total(jobs, output_file):
 
             # Write the total row at the end
             writer.writerow([])
-            writer.writerow(['', '', '', 'Total Glass', total_glass_panes, '', ''])
+            writer.writerow(['', '', '', 'Total Glass', total_glass_panes, 'Date', iso_date])
 
         print(f"CSV table with total glass panes created successfully at {output_file}")
     except Exception as e:
         print(f"An error occurred while creating the glass table: {e}")
 
 # Function to create the table of screen with a total count
-def create_screen_with_total(jobs, output_file):
+def create_screen_with_total(jobs, output_file, iso_date):
     if not jobs:
         print("No jobs found for the specified date.")
         return
@@ -244,7 +244,7 @@ def create_screen_with_total(jobs, output_file):
 
             # Write the total row at the end
             writer.writerow([])
-            writer.writerow(['', '', '', 'Total Screen', total_screen_panes, '', '','',''])
+            writer.writerow(['', '', '', 'Total Screen', total_screen_panes, '', '','Date',iso_date])
 
         print(f"CSV table with total screen panes created successfully at {output_file}")
     except Exception as e:
@@ -279,8 +279,8 @@ if __name__ == "__main__":
             # Generate the table
             table_file = 'glass_table.csv'
             screen_file = 'screen_table.csv'
-            create_table_with_total(jobs, table_file)
-            create_screen_with_total(jobs, screen_file)
+            create_table_with_total(jobs, table_file, iso_date)
+            create_screen_with_total(jobs, screen_file, iso_date)
             print(f"Table generated and saved to {table_file}")
         except Exception as e:
             print(f"An error occurred: {e}")
