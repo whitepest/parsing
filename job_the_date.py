@@ -269,7 +269,7 @@ if __name__ == "__main__":
 
         try:
             jobs = fetch_all_jobs_for_date(iso_date, headers)
-            
+            screen_jobs = fetch_all_screen_jobs_for_date(iso_date, headers)
             # Save the results to a JSON file
             results_file = 'results.json'
             with open(results_file, 'w') as f:
@@ -280,7 +280,7 @@ if __name__ == "__main__":
             table_file = 'glass_table.csv'
             screen_file = 'screen_table.csv'
             create_table_with_total(jobs, table_file, iso_date)
-            create_screen_with_total(jobs, screen_file, iso_date)
+            create_screen_with_total(screen_jobs, screen_file, iso_date)
             print(f"Table generated and saved to {table_file}")
         except Exception as e:
             print(f"An error occurred: {e}")
