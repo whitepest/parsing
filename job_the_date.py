@@ -268,9 +268,13 @@ if __name__ == "__main__":
             screen_jobs = fetch_all_screen_jobs_for_date(iso_date, headers)
             # Save the results to a JSON file
             results_file = 'results.json'
+            result_screen_file = 'result_screen.json'
             with open(results_file, 'w') as f:
                 json.dump(jobs, f, indent=2)
             print(f"Saved {len(jobs)} jobs to {results_file}")
+            with open(result_screen_file, 'w') as f:
+                json.dump(jobs, f, indent=2)
+            print(f"Saved {len(jobs)} jobs to {result_screen_file}")
             
             # Generate the table
             table_file = 'glass_table.csv'
