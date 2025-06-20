@@ -124,13 +124,9 @@ def fetch_all_screen_jobs_for_date(iso_date, headers):
         jobs = result['data']['jobs']['edges']
         for job in jobs:
             job_node = job['node']
-            filtered_line_items = []
-            for item in job_node.get('lineItems', {}).get('edges', []):
-                node_data = item.get('node', {})
-                if any("screen" in str(value).lower() for value in node_data.values()):
-                    filtered_line_items.append(node_data)
-            if filtered_line_items:
-                job_node['lineItems']['edges'] = [{'node': item} for item in filtered_line_items]
+            title = job_node.get('title', '')
+            # фильтрация по title
+            if 'screen' in title.lower():
                 all_screen_jobs.append(job_node)
         page_info = result['data']['jobs']['pageInfo']
         if page_info['hasNextPage']:
