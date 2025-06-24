@@ -127,18 +127,27 @@ def create_table_with_total_glass(jobs, output_file, iso_date):
                     glass_size = "N/A"
                     oa = "N/A"
                     muntin_bars = "N/A"
+                    collecting_size = False
+                    size_lines = []
                     
                     # Parsing the description (assumes consistent format)
                     for line in description.splitlines():
                         if "Glass Type" in line:
                             glass_type = line.split(":", 1)[1].strip()
-                        elif "Size" in line:
-                            glass_size = line.split(":", 1)[1].strip()
                         elif "OA" in line:
                             oa = line.split(":", 1)[1].strip()
                         elif "Muntin Bars" in line:
                             muntin_bars = line.split(":", 1)[1].strip()
-
+                        elif "Size" in line:
+                            collecting_size = True
+                            size_lines.append(line.split(":", 1)[1].strip())
+                        elif collecting_size:
+                            if line == "" or any(x in line for x in ["Color", "Spring", "Pins", "Middle bar", "Puls"]):
+                                collecting_size = False
+                            else:
+                                size_lines.append(line)
+                    
+                    glass_size = "\n".join(size_lines) if size_lines else "N/A"
                     # Write the row
                     writer.writerow([item_name, title, client_name, glass_type, quantity, glass_size, oa, muntin_bars])
 
@@ -183,12 +192,11 @@ def create_table_with_total_screen(jobs, output_file, iso_date):
                     pins = "N/A"
                     middle_bar = "N/A"
                     puls = "N/A"
-                    
+
+                    size_lines = []
                     # Parsing the description (assumes consistent format)
                     for line in description.splitlines():
-                        if "Size" in line:
-                            screen_size = line.split(":", 1)[1].strip()
-                        elif "Color" in line:
+                        if "Color" in line:
                             screen_color = line.split(":", 1)[1].strip()
                         elif "Spring" in line:
                             spring = line.split(":", 1)[1].strip()
@@ -198,7 +206,16 @@ def create_table_with_total_screen(jobs, output_file, iso_date):
                             middle_bar = line.split(":", 1)[1].strip()
                         elif "Puls" in line:
                             puls = line.split(":", 1)[1].strip()
-
+                        elif "Size" in line:
+                            collecting_size = True
+                            size_lines.append(line.split(":", 1)[1].strip())
+                        elif collecting_size:
+                            if line == "" or any(x in line for x in ["Color", "Spring", "Pins", "Middle bar", "Puls"]):
+                                collecting_size = False
+                            else:
+                                size_lines.append(line)
+                    
+                    screen_size = "\n".join(size_lines) if size_lines else "N/A"
                     # Write the row
                     writer.writerow([item_name, title, client_name, screen_size, quantity, screen_color, spring, pins, middle_bar, puls])
 
