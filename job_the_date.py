@@ -30,7 +30,8 @@ def run_query(query, variables, headers):
         raise Exception(f"Query failed with status code {response.status_code}: {response.text}")
 
 # Function to fetch all jobs for a specific date
-def fetch_all_jobs_for_date(iso_date, headers):
+def fetch_all_jobs_for_date(iso_date, headers, sort_type, sort_line):
+    sort_line = sort_line.lower()
     all_jobs = []
     query = """
     query GetJobsForDate($after: String, $start_date: ISO8601DateTime!, $end_date: ISO8601DateTime!) {
@@ -45,6 +46,7 @@ def fetch_all_jobs_for_date(iso_date, headers):
                     lineItems {
                         edges {
                             node {
+                                name
                                 description
                                 quantity
                             }
@@ -62,82 +64,40 @@ def fetch_all_jobs_for_date(iso_date, headers):
     # Extract the start and end of the day from the ISO date
     start_date = iso_date
     end_date = (datetime.strptime(iso_date, "%Y-%m-%dT00:00:00Z") + timedelta(days=1)).strftime("%Y-%m-%dT00:00:00Z")
+    #print("end_date: ", end_date)
     variables = {'after': None, 'start_date': start_date, 'end_date': end_date}
-
     while True:
         result = run_query(query, variables, headers)
         jobs = result['data']['jobs']['edges']
         for job in jobs:
             job_node = job['node']
-            filtered_line_items = [
-                item['node'] for item in job_node.get('lineItems', {}).get('edges', [])
-                if "Glass Type:" in item['node'].get('description', '')
-            ]
+            filtered_line_items = []
+            for item in job_node.get('lineItems', {}).get('edges', []):
+                node_data = item.get('node', {})
+                name = node_data.get('name', '')
+                description = node_data.get('description', '')
+                if sort_type == "description":
+                    if sort_line in description.lower():
+                        filtered_line_items.append({'node': node_data})
+                elif sort_type == "name":
+                    if sort_line in name.lower():
+                        filtered_line_items.append({'node': node_data})
+                else :
+                    print("sort_type inccorect")
+                    break
             if filtered_line_items:
-                job_node['lineItems']['edges'] = [{'node': item} for item in filtered_line_items]
+                job_node['lineItems']['edges'] = filtered_line_items
                 all_jobs.append(job_node)
         page_info = result['data']['jobs']['pageInfo']
+        print("Jobs received:", len(jobs))
         if page_info['hasNextPage']:
             variables['after'] = page_info['endCursor']
         else:
             break
-
     return all_jobs
 
-# Function to fetch all screen jobs for a specific date
-def fetch_all_screen_jobs_for_date(iso_date, headers):
-    all_screen_jobs = []
-    query = """
-    query GetJobsForDate($after: String, $start_date: ISO8601DateTime!, $end_date: ISO8601DateTime!) {
-        jobs(filter: { startAt: { after: $start_date, before: $end_date } }, first: 20, after: $after) {
-            edges {
-                node {
-                    title
-                    client {
-                        name
-                    }
-                    startAt
-                    lineItems {
-                        edges {
-                            node {
-                                description
-                                quantity
-                            }
-                        }
-                    }
-                }
-            }
-            pageInfo {
-                hasNextPage
-                endCursor
-            }
-        }
-    }
-    """
-    # Extract the start and end of the day from the ISO date
-    start_date = iso_date
-    end_date = (datetime.strptime(iso_date, "%Y-%m-%dT00:00:00Z") + timedelta(days=1)).strftime("%Y-%m-%dT00:00:00Z")
-    variables = {'after': None, 'start_date': start_date, 'end_date': end_date}
-
-    while True:
-        result = run_query(query, variables, headers)
-        jobs = result['data']['jobs']['edges']
-        for job in jobs:
-            job_node = job['node']
-            title = job_node.get('title', '')
-            # фильтрация по title
-            if 'screen' in title.lower():
-                all_screen_jobs.append(job_node)
-        page_info = result['data']['jobs']['pageInfo']
-        if page_info['hasNextPage']:
-            variables['after'] = page_info['endCursor']
-        else:
-            break
-
-    return all_screen_jobs
-
 # Function to create the table of glass with a total count
-def create_table_with_total(jobs, output_file, iso_date):
+def create_table_with_total_glass(jobs, output_file, iso_date):
     if not jobs:
         print("No jobs found for the specified date.")
         return
@@ -148,7 +108,7 @@ def create_table_with_total(jobs, output_file, iso_date):
         with open(output_file, 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
             # Write the header row
-            writer.writerow(['Title', 'Name', 'Glass Type', 'QNT', 'Glass Size', 'OA', 'Muntin Bars'])
+            writer.writerow(['Item Name', 'Title', 'Name', 'Glass Type', 'QNT', 'Glass Size', 'OA', 'Muntin Bars'])
 
             for job in jobs:
                 title = job.get('title', 'N/A')
@@ -156,8 +116,10 @@ def create_table_with_total(jobs, output_file, iso_date):
                 line_items = job.get('lineItems', {}).get('edges', [])
 
                 for item in line_items:
-                    description = item.get('node', {}).get('description', 'N/A')
-                    quantity = item.get('node', {}).get('quantity', 0)
+                    node = item.get('node', {})
+                    item_name = node.get('name', 'N/A')
+                    description = node.get('description', 'N/A')
+                    quantity = node.get('quantity', 0)
                     total_glass_panes += quantity  # Accumulate total glass panes
                     
                     # Extract glass details from the description
@@ -169,27 +131,27 @@ def create_table_with_total(jobs, output_file, iso_date):
                     # Parsing the description (assumes consistent format)
                     for line in description.splitlines():
                         if "Glass Type" in line:
-                            glass_type = line.split(":")[1].strip()
+                            glass_type = line.split(":", 1)[1].strip()
                         elif "Size" in line:
-                            glass_size = line.split(":")[1].strip()
+                            glass_size = line.split(":", 1)[1].strip()
                         elif "OA" in line:
-                            oa = line.split(":")[1].strip()
+                            oa = line.split(":", 1)[1].strip()
                         elif "Muntin Bars" in line:
-                            muntin_bars = line.split(":")[1].strip()
+                            muntin_bars = line.split(":", 1)[1].strip()
 
                     # Write the row
-                    writer.writerow([title, client_name, glass_type, quantity, glass_size, oa, muntin_bars])
+                    writer.writerow([item_name, title, client_name, glass_type, quantity, glass_size, oa, muntin_bars])
 
             # Write the total row at the end
             writer.writerow([])
-            writer.writerow(['', '', '', 'Total Glass', total_glass_panes, 'Date', iso_date])
+            writer.writerow(['Total Glass', total_glass_panes, 'Date', iso_date, '', '', '', ''])
 
         print(f"CSV table with total glass panes created successfully at {output_file}")
     except Exception as e:
         print(f"An error occurred while creating the glass table: {e}")
 
 # Function to create the table of screen with a total count
-def create_screen_with_total(jobs, output_file, iso_date):
+def create_table_with_total_screen(jobs, output_file, iso_date):
     if not jobs:
         print("No jobs found for the specified date.")
         return
@@ -200,7 +162,7 @@ def create_screen_with_total(jobs, output_file, iso_date):
         with open(output_file, 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
             # Write the header row
-            writer.writerow(['Title', 'Name', 'Size', 'QNT', 'Color', 'Spring', 'Pins', 'Middle bar', 'Puls'])
+            writer.writerow(['Item Name','Title', 'Name', 'Size', 'QNT', 'Color', 'Spring', 'Pins', 'Middle bar', 'Puls'])
 
             for job in jobs:
                 title = job.get('title', 'N/A')
@@ -208,8 +170,10 @@ def create_screen_with_total(jobs, output_file, iso_date):
                 line_items = job.get('lineItems', {}).get('edges', [])
 
                 for item in line_items:
-                    description = item.get('node', {}).get('description', 'N/A')
-                    quantity = item.get('node', {}).get('quantity', 0)
+                    node = item.get('node', {})
+                    item_name = node.get('name', 'N/A')
+                    description = node.get('description', 'N/A')
+                    quantity = node.get('quantity', 0)
                     total_screen_panes += quantity  # Accumulate total screen panes
                     
                     # Extract screen details from the description
@@ -223,24 +187,24 @@ def create_screen_with_total(jobs, output_file, iso_date):
                     # Parsing the description (assumes consistent format)
                     for line in description.splitlines():
                         if "Size" in line:
-                            screen_size = line.split(":")[1].strip()
+                            screen_size = line.split(":", 1)[1].strip()
                         elif "Color" in line:
-                            screen_color = line.split(":")[1].strip()
+                            screen_color = line.split(":", 1)[1].strip()
                         elif "Spring" in line:
-                            spring = line.split(":")[1].strip()
+                            spring = line.split(":", 1)[1].strip()
                         elif "Pins" in line:
-                            pins = line.split(":")[1].strip()
+                            pins = line.split(":", 1)[1].strip()
                         elif "Middle bar" in line:
-                            middle_bar = line.split(":")[1].strip()
+                            middle_bar = line.split(":", 1)[1].strip()
                         elif "Puls" in line:
-                            puls = line.split(":")[1].strip()
+                            puls = line.split(":", 1)[1].strip()
 
                     # Write the row
-                    writer.writerow([title, client_name, screen_size, quantity, screen_color, spring, pins, middle_bar, puls])
+                    writer.writerow([item_name, title, client_name, screen_size, quantity, screen_color, spring, pins, middle_bar, puls])
 
             # Write the total row at the end
             writer.writerow([])
-            writer.writerow(['', '', '', 'Total Screen', total_screen_panes, '', '','Date',iso_date])
+            writer.writerow(['Total Screen', total_screen_panes, 'Date', iso_date, '', '', '', '', '', ''])
 
         print(f"CSV table with total screen panes created successfully at {output_file}")
     except Exception as e:
@@ -264,23 +228,30 @@ if __name__ == "__main__":
         }
 
         try:
-            jobs = fetch_all_jobs_for_date(iso_date, headers)
-            screen_jobs = fetch_all_screen_jobs_for_date(iso_date, headers)
+            sort_type_name = 'name'
+            sort_type_description = 'description'
+            sort_line_glass = 'Glass type:'
+            sort_line_screen = 'screen'
+
+            glass_jobs = fetch_all_jobs_for_date(iso_date, headers, sort_type_description, sort_line_glass)
+            screen_jobs = fetch_all_jobs_for_date(iso_date, headers, sort_type_name, sort_line_screen)
+            # Define json file
+            results_glass_file = 'results_glass.json'
+            results_screen_file = 'result_screen.json'
             # Save the results to a JSON file
-            results_file = 'results.json'
-            result_screen_file = 'result_screen.json'
-            with open(results_file, 'w') as f:
-                json.dump(jobs, f, indent=2)
-            print(f"Saved {len(jobs)} jobs to {results_file}")
-            with open(result_screen_file, 'w') as f:
-                json.dump(jobs, f, indent=2)
-            print(f"Saved {len(jobs)} jobs to {result_screen_file}")
+            with open(results_glass_file, 'w') as f:
+                json.dump(glass_jobs, f, indent=2)
+            print(f"Saved {len(glass_jobs)} jobs to {results_glass_file}")
+            
+            with open(results_screen_file, 'w') as f:
+                json.dump(screen_jobs, f, indent=2)
+            print(f"Saved {len(screen_jobs)} jobs to {results_screen_file}")
             
             # Generate the table
             table_file = 'glass_table.csv'
             screen_file = 'screen_table.csv'
-            create_table_with_total(jobs, table_file, iso_date)
-            create_screen_with_total(screen_jobs, screen_file, iso_date)
+            create_table_with_total_glass(glass_jobs, table_file, iso_date)
+            create_table_with_total_screen(screen_jobs, screen_file, iso_date)
             print(f"Table generated and saved to {table_file}")
         except Exception as e:
             print(f"An error occurred: {e}")
