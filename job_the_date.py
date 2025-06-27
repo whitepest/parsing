@@ -112,7 +112,7 @@ def create_table_with_total_glass(jobs, output_file, iso_date):
         with open(output_file, 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
             # Write the header row
-            writer.writerow(['Item Name', 'Title', 'Name', 'Glass Type', 'QNT', 'Glass Size', 'OA', 'Muntin Bars'])
+            writer.writerow(['Item Name', 'Title', 'Name', 'Glass Type', 'QNT', 'Glass Size', 'OA', 'Muntin Bars', 'Unsorted'])
 
             for job in jobs:
                 title = job.get('title', 'N/A')
@@ -131,34 +131,38 @@ def create_table_with_total_glass(jobs, output_file, iso_date):
                     oa_lines = []
                     muntin_bars_lines = []
                     size_lines = []
+                    unsorted_lines = []
                     
                     collecting_size = False
                     
                     # Parsing the description (assumes consistent format)
                     for line in description.splitlines():
-                        line = line.strip()
+                        line = line.lower().strip()
 
-                        if "Glass Type" in line:
+                        if "glass type" in line:
                             glass_type_lines.append(line.split(":", 1)[1].strip())
-                        elif "OA" in line:
+                        elif "oa" in line:
                             oa_lines.append(line.split(":", 1)[1].strip())
-                        elif "Muntin Bars" in line:
+                        elif "muntin bars" in line:
                             muntin_bars_lines.append(line.split(":", 1)[1].strip())
-                        elif "Size" in line:
+                        elif "size" in line:
                             collecting_size = True
                             size_lines.append(line.split(":", 1)[1].strip())
                         elif collecting_size:
-                            if line == "" or any(x in line for x in ["Glass Type", "OA", "Muntin Bars", "Size"]):
+                            if line == "" or any(x in line for x in ["glass type", "oa", "muntin bars", "size"]):
                                 collecting_size = False
                             else:
                                 size_lines.append(line)
+                        else:
+                            unsorted_lines.append(line)
                     
                     glass_type = clean_multiline(" | ".join(glass_type_lines)) if glass_type_lines else "N/A"
                     oa = clean_multiline(" | ".join(oa_lines)) if oa_lines else "N/A"
                     muntin_bars = clean_multiline(" | ".join(muntin_bars_lines)) if muntin_bars_lines else "N/A"
                     glass_size = clean_multiline(" | ".join(size_lines)) if size_lines else "N/A"
+                    unsorted = clean_multiline(" | ".join(unsorted_lines)) if unsorted_lines else "N/A"
                     # Write the row
-                    writer.writerow([item_name, title, client_name, glass_type, quantity, glass_size, oa, muntin_bars])
+                    writer.writerow([item_name, title, client_name, glass_type, quantity, glass_size, oa, muntin_bars, unsorted])
 
             # Write the total row at the end
             writer.writerow([])
@@ -180,7 +184,7 @@ def create_table_with_total_screen(jobs, output_file, iso_date):
         with open(output_file, 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
             # Write the header row
-            writer.writerow(['Item Name','Title', 'Name', 'Size', 'QNT', 'Color', 'Spring', 'Pins', 'Middle bar', 'Puls'])
+            writer.writerow(['Item Name','Title', 'Name', 'Size', 'QNT', 'Color', 'Springs', 'Pins', 'Middle bar', 'Puls', 'Unsorted'])
 
             for job in jobs:
                 title = job.get('title', 'N/A')
@@ -201,31 +205,34 @@ def create_table_with_total_screen(jobs, output_file, iso_date):
                     middle_bar_lines = []
                     puls_lines = []
                     size_lines = []
+                    unsorted_lines = []
 
                     collecting_size = False
 
                     # Parsing the description (assumes consistent format)
                     for line in description.splitlines():
-                        line = line.strip()
+                        line = line.lower().strip()
 
-                        if "Color" in line:
-                            color_lines.append((":", 1)[1].strip())
-                        elif "Spring" in line:
-                            spring_lines.append(line.split(":", 1)[1].strip())
-                        elif "Pins" in line:
+                        if "color" in line and ":" in line:
+                            color_lines.append(line.split(":", 1)[1].strip())
+                        elif "springs" in line:
+                            spring_lines.append(line.strip())
+                        elif "pins" in line:
                             pins_lines.append(line.split(":", 1)[1].strip())
-                        elif "Middle bar" in line:
+                        elif "middle bar" in line:
                             middle_bar_lines.append(line.split(":", 1)[1].strip())
-                        elif "Puls" in line:
+                        elif "puls" in line:
                             puls_lines.append(line.split(":", 1)[1].strip())
-                        elif "Size" in line:
+                        elif "size" in line:
                             collecting_size = True
                             size_lines.append(line.split(":", 1)[1].strip())
                         elif collecting_size:
-                            if line == "" or any(x in line for x in ["Color", "Spring", "Pins", "Middle bar", "Puls"]):
+                            if line == "" or any(x in line for x in ["color", "springs", "pins", "middle bar", "puls"]):
                                 collecting_size = False
                             else:
                                 size_lines.append(line)
+                        else:
+                            unsorted_lines.append(line)
                     
                     screen_color = clean_multiline(" | ".join(color_lines)) if color_lines else "N/A"
                     spring = clean_multiline(" | ".join(spring_lines)) if spring_lines else "N/A"
@@ -233,9 +240,10 @@ def create_table_with_total_screen(jobs, output_file, iso_date):
                     middle_bar = clean_multiline(" | ".join(middle_bar_lines)) if middle_bar_lines else "N/A"
                     puls = clean_multiline(" | ".join(puls_lines)) if puls_lines else "N/A"
                     screen_size = clean_multiline(" | ".join(size_lines)) if size_lines else "N/A"
+                    unsorted = clean_multiline(" | ".join(unsorted_lines)) if unsorted_lines else "N/A"
 
                     # Write the row
-                    writer.writerow([item_name, title, client_name, screen_size, quantity, screen_color, spring, pins, middle_bar, puls])
+                    writer.writerow([item_name, title, client_name, screen_size, quantity, screen_color, spring, pins, middle_bar, puls, unsorted])
 
             # Write the total row at the end
             writer.writerow([])
