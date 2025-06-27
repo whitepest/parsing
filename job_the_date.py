@@ -29,6 +29,10 @@ def run_query(query, variables, headers):
     else:
         raise Exception(f"Query failed with status code {response.status_code}: {response.text}")
 
+#clean line break
+def clean_multiline(value):
+    return value.replace('\n', ' ').strip()
+
 # Function to fetch all jobs for a specific date
 def fetch_all_jobs_for_date(iso_date, headers, sort_type, sort_line):
     sort_line = sort_line.lower()
@@ -123,31 +127,36 @@ def create_table_with_total_glass(jobs, output_file, iso_date):
                     total_glass_panes += quantity  # Accumulate total glass panes
                     
                     # Extract glass details from the description
-                    glass_type = "N/A"
-                    glass_size = "N/A"
-                    oa = "N/A"
-                    muntin_bars = "N/A"
-                    collecting_size = False
+                    glass_type_lines = []
+                    oa_lines = []
+                    muntin_bars_lines = []
                     size_lines = []
+                    
+                    collecting_size = False
                     
                     # Parsing the description (assumes consistent format)
                     for line in description.splitlines():
+                        line = line.strip()
+
                         if "Glass Type" in line:
-                            glass_type = line.split(":", 1)[1].strip()
+                            glass_type_lines.append(line.split(":", 1)[1].strip())
                         elif "OA" in line:
-                            oa = line.split(":", 1)[1].strip()
+                            oa_lines.append(line.split(":", 1)[1].strip())
                         elif "Muntin Bars" in line:
-                            muntin_bars = line.split(":", 1)[1].strip()
+                            muntin_bars_lines.append(line.split(":", 1)[1].strip())
                         elif "Size" in line:
                             collecting_size = True
                             size_lines.append(line.split(":", 1)[1].strip())
                         elif collecting_size:
-                            if line == "" or any(x in line for x in ["Color", "Spring", "Pins", "Middle bar", "Puls"]):
+                            if line == "" or any(x in line for x in ["Glass Type", "OA", "Muntin Bars", "Size"]):
                                 collecting_size = False
                             else:
                                 size_lines.append(line)
                     
-                    glass_size = "\n".join(size_lines) if size_lines else "N/A"
+                    glass_type = clean_multiline(" | ".join(glass_type_lines)) if glass_type_lines else "N/A"
+                    oa = clean_multiline(" | ".join(oa_lines)) if oa_lines else "N/A"
+                    muntin_bars = clean_multiline(" | ".join(muntin_bars_lines)) if muntin_bars_lines else "N/A"
+                    glass_size = clean_multiline(" | ".join(size_lines)) if size_lines else "N/A"
                     # Write the row
                     writer.writerow([item_name, title, client_name, glass_type, quantity, glass_size, oa, muntin_bars])
 
@@ -186,26 +195,29 @@ def create_table_with_total_screen(jobs, output_file, iso_date):
                     total_screen_panes += quantity  # Accumulate total screen panes
                     
                     # Extract screen details from the description
-                    screen_size = "N/A"
-                    screen_color = "N/A"
-                    spring = "N/A"
-                    pins = "N/A"
-                    middle_bar = "N/A"
-                    puls = "N/A"
-
+                    color_lines = []
+                    spring_lines = []
+                    pins_lines = []
+                    middle_bar_lines = []
+                    puls_lines = []
                     size_lines = []
+
+                    collecting_size = False
+
                     # Parsing the description (assumes consistent format)
                     for line in description.splitlines():
+                        line = line.strip()
+
                         if "Color" in line:
-                            screen_color = line.split(":", 1)[1].strip()
+                            color_lines.append((":", 1)[1].strip())
                         elif "Spring" in line:
-                            spring = line.split(":", 1)[1].strip()
+                            spring_lines.append(line.split(":", 1)[1].strip())
                         elif "Pins" in line:
-                            pins = line.split(":", 1)[1].strip()
+                            pins_lines.append(line.split(":", 1)[1].strip())
                         elif "Middle bar" in line:
-                            middle_bar = line.split(":", 1)[1].strip()
+                            middle_bar_lines.append(line.split(":", 1)[1].strip())
                         elif "Puls" in line:
-                            puls = line.split(":", 1)[1].strip()
+                            puls_lines.append(line.split(":", 1)[1].strip())
                         elif "Size" in line:
                             collecting_size = True
                             size_lines.append(line.split(":", 1)[1].strip())
@@ -215,7 +227,13 @@ def create_table_with_total_screen(jobs, output_file, iso_date):
                             else:
                                 size_lines.append(line)
                     
-                    screen_size = "\n".join(size_lines) if size_lines else "N/A"
+                    screen_color = clean_multiline(" | ".join(color_lines)) if color_lines else "N/A"
+                    spring = clean_multiline(" | ".join(spring_lines)) if spring_lines else "N/A"
+                    pins = clean_multiline(" | ".join(pins_lines)) if pins_lines else "N/A"
+                    middle_bar = clean_multiline(" | ".join(middle_bar_lines)) if middle_bar_lines else "N/A"
+                    puls = clean_multiline(" | ".join(puls_lines)) if puls_lines else "N/A"
+                    screen_size = clean_multiline(" | ".join(size_lines)) if size_lines else "N/A"
+
                     # Write the row
                     writer.writerow([item_name, title, client_name, screen_size, quantity, screen_color, spring, pins, middle_bar, puls])
 
