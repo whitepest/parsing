@@ -1,6 +1,7 @@
 import requests
 import json
 import csv
+import copy
 from datetime import datetime, timedelta
 from this_date import get_iso_date  # Import the function from this_date.py
 
@@ -36,23 +37,27 @@ def clean_multiline(value):
 # Function to fetch all jobs for a specific date
 def fetch_all_jobs_for_date(iso_date, headers, sort_type, sort_line):
     sort_line = sort_line.lower()
-    all_jobs = []
+    unique_jobs = {} # use id from visits to uniqueness 
     query = """
-    query GetJobsForDate($after: String, $start_date: ISO8601DateTime!, $end_date: ISO8601DateTime!) {
-        jobs(filter: { startAt: { after: $start_date, before: $end_date } }, first: 20, after: $after) {
+    query GetVisitsForDate($after: String, $start_date: ISO8601DateTime!, $end_date: ISO8601DateTime!) {
+        visits(filter: { startAt: { after: $start_date, before: $end_date } }, first: 20, after: $after) {
             edges {
                 node {
-                    title
-                    client {
-                        name
-                    }
+                    id
                     startAt
-                    lineItems {
-                        edges {
-                            node {
-                                name
-                                description
-                                quantity
+                    job {
+                        id
+                        title
+                        client {
+                            name
+                        }
+                        lineItems {
+                            edges {
+                                node {
+                                    name
+                                    description
+                                    quantity
+                                }
                             }
                         }
                     }
@@ -72,33 +77,43 @@ def fetch_all_jobs_for_date(iso_date, headers, sort_type, sort_line):
     variables = {'after': None, 'start_date': start_date, 'end_date': end_date}
     while True:
         result = run_query(query, variables, headers)
-        jobs = result['data']['jobs']['edges']
-        for job in jobs:
-            job_node = job['node']
-            filtered_line_items = []
-            for item in job_node.get('lineItems', {}).get('edges', []):
-                node_data = item.get('node', {})
-                name = node_data.get('name', '')
-                description = node_data.get('description', '')
-                if sort_type == "description":
-                    if sort_line in description.lower():
-                        filtered_line_items.append({'node': node_data})
-                elif sort_type == "name":
-                    if sort_line in name.lower():
-                        filtered_line_items.append({'node': node_data})
-                else :
-                    print("sort_type inccorect")
-                    break
-            if filtered_line_items:
-                job_node['lineItems']['edges'] = filtered_line_items
-                all_jobs.append(job_node)
-        page_info = result['data']['jobs']['pageInfo']
-        print("Jobs received:", len(jobs))
+        visits = result['data']['visits']['edges']
+        for visit in visits:
+            visit_node = visit['node']
+            job_node = visit_node.get('job')
+            if job_node: # is it exists
+                job_id = job_node['id']
+                # Check, is it already in list
+                if job_id not in unique_jobs:
+                    filtered_line_items = []
+                    for item in job_node.get('lineItems', {}).get('edges', []):
+                        node_data = item.get('node', {})
+                        name = node_data.get('name', '')
+                        description = node_data.get('description', '')
+
+                        if sort_type == "description":
+                            if sort_line in description.lower():
+                                filtered_line_items.append({'node': node_data})
+                        elif sort_type == "name":
+                            if sort_line in name.lower():
+                                filtered_line_items.append({'node': node_data})
+                        else :
+                            print("sort_type inccorect")
+                            break
+                    if filtered_line_items:
+                        # deep copy, to prevent from modify original object from graphql answer
+                        job_to_add = copy.deepcopy(job_node)
+                        job_to_add['lineItems']['edges'] = filtered_line_items
+                        unique_jobs[job_id] = job_to_add
+
+        page_info = result['data']['visits']['pageInfo']
+        print(f"visits received: {len(visits)}. unique jobs found: {len(unique_jobs)}")
+
         if page_info['hasNextPage']:
             variables['after'] = page_info['endCursor']
         else:
             break
-    return all_jobs
+    return list(unique_jobs.values())
 
 # Function to create the table of glass with a total count
 def create_table_with_total_glass(jobs, output_file, iso_date):
